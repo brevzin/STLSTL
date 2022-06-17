@@ -1810,65 +1810,6 @@ STATIC_ASSERT(ranges::viewable_range<std::span<int> const&>);
 STATIC_ASSERT(ranges::viewable_range<std::span<int>>);
 STATIC_ASSERT(ranges::viewable_range<std::span<int> const>);
 
-namespace poison_pill_test {
-    template <class T>
-    auto begin(T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto begin(const T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto end(T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto end(const T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto rbegin(T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto rbegin(const T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto rend(T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto rend(const T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto size(T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-    template <class T>
-    auto size(const T&) {
-        STATIC_ASSERT(always_false<T>);
-    }
-
-    struct some_type {};
-
-    // The above underconstrained templates should be blocked by the poison pills for the ranges CPOs tested below;
-    // that is not the case in N4849, which P2091 will fix.
-
-    STATIC_ASSERT(!CanBegin<some_type&>);
-    STATIC_ASSERT(!CanBegin<some_type const&>);
-    STATIC_ASSERT(!CanEnd<some_type&>);
-    STATIC_ASSERT(!CanEnd<some_type const&>);
-    STATIC_ASSERT(!CanRBegin<some_type&>);
-    STATIC_ASSERT(!CanRBegin<some_type const&>);
-    STATIC_ASSERT(!CanREnd<some_type&>);
-    STATIC_ASSERT(!CanREnd<some_type const&>);
-    STATIC_ASSERT(!CanSize<some_type&>);
-    STATIC_ASSERT(!CanSize<some_type const&>);
-} // namespace poison_pill_test
-
 namespace unwrapped_begin_end {
     // Validate the iterator-unwrapping range access CPOs ranges::_Ubegin and ranges::_Uend
     using test::CanCompare, test::CanDifference, test::Common, test::ProxyRef, test::Sized, test::IsWrapped;
